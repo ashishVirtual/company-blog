@@ -6,9 +6,16 @@ import Link from "next/link";
 import Image from "next/image";
 
 const getData = async () => {
-  const response = await fetch("http://localhost:3000/pages/api/product");
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/api/product`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return { result: [] }; // Return an empty result to avoid breaking the app
+  }
 };
 export default async function MediaCard() {
   let blogData = await getData();
