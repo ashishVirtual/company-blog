@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const getData = async () => {
   try {
-    const response = await fetch(`/pages/api/product`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/api/product`);
    
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
