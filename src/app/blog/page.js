@@ -1,4 +1,4 @@
-"use client";
+
 
 import MediaCard from "@/component/Mediacard";
 
