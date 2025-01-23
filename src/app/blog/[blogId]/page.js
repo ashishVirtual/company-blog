@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function BlogId({ params }) {
   const dispatch = useDispatch();
-
   const { blogId } = useParams(params);
 
   useEffect(() => {
@@ -16,11 +15,44 @@ export default function BlogId({ params }) {
 
   const blogData = useSelector((state) => state.blog.blog.result);
 
-  if (!params || !blogData) {
+  const selectedBlog = blogData?.find((item) => item._id == blogId);
+
+  // Function to generate metadata
+  const generateMetadata = () => {
+    if (selectedBlog) {
+      return {
+        title: selectedBlog.title || "Blog Post",
+        description: selectedBlog.longDescription || "Read this blog post for detailed information.",
+      };
+    }
+    return {
+      title: "Blog Post",
+      description: "Explore a variety of blog posts on different topics.",
+    };
+  };
+
+  // Set metadata dynamically for this page
+  const metadata = generateMetadata();
+
+  // Update meta tags in the document head
+  useEffect(() => {
+    if (selectedBlog) {
+      document.title = metadata.title;
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute("content", metadata.description);
+      } else {
+        const newMetaDescription = document.createElement("meta");
+        newMetaDescription.setAttribute("name", "description");
+        newMetaDescription.setAttribute("content", metadata.description);
+        document.head.appendChild(newMetaDescription);
+      }
+    }
+  }, [selectedBlog, metadata]);
+
+  if (!params || !selectedBlog) {
     return <p>Loading...</p>;
   }
-
-  const selectedBlog = blogData.find((item) => item._id == blogId);
 
   if (!selectedBlog) {
     return <p>Blog post not found.</p>;
