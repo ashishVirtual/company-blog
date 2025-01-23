@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const getBlogData = createAsyncThunk("getBlogData", async () => {
-  const result = await fetch("http://localhost:3000/pages/api/product");
+  const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/api/product`);
   return await result.json();
 });
 
